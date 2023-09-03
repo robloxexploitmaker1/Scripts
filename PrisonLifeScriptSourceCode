@@ -1,0 +1,596 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+   Name = "Prison Life Script",
+   LoadingTitle = "Prison Life GUI",
+   LoadingSubtitle = "by Me",
+   ConfigurationSaving = {
+      Enabled = false,
+      FolderName = nil, -- Create a custom folder for your hub/game
+      FileName = "Big Hub"
+   },
+   Discord = {
+      Enabled = true,
+      Invite = "Yf4tCv4VeA", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ABCD would be ABCD
+      RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+   },
+   KeySystem = true, -- Set this to true to use our key system
+   KeySettings = {
+      Title = "Prison Life GUI Keysystem",
+      Subtitle = "Key System",
+      Note = "join discord for key",
+      FileName = "PrisonLifeGUIKey", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
+      SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+      GrabKeyFromSite = true, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+      Key = {"https://pastebin.com/raw/EVkC4M2c"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
+   }
+})
+
+local MainTab = Window:CreateTab("Home", nil) -- Title, Image
+local MainSection = MainTab:CreateSection("Main")
+
+Rayfield:Notify({
+   Title = "Successfully Executed!",
+   Content = "Script Was Successfully Executed!",
+   Duration = 5,
+   Image = nil,
+   Actions = { -- Notification Buttons
+      Ignore = {
+         Name = "Okay!",
+         Callback = function()
+         print("The user tapped Okay!")
+      end
+   },
+},
+})
+
+local Button = MainTab:CreateButton({
+   Name = "Inf Jump/inf stamina toggle",
+   Callback = function()
+   --Toggles the infinite jump between on or off on every script run
+_G.infinjump = not _G.infinjump
+
+if _G.infinJumpStarted == nil then
+	--Ensures this only runs once to save resources
+	_G.infinJumpStarted = true
+	
+	--Notifies readiness
+	game.StarterGui:SetCore("SendNotification", {Title="Youtube Hub"; Text="Infinite Jump Activated!"; Duration=5;})
+
+	--The actual infinite jump
+	local plr = game:GetService('Players').LocalPlayer
+	local m = plr:GetMouse()
+	m.KeyDown:connect(function(k)
+		if _G.infinjump then
+			if k:byte() == 32 then
+			humanoid = game:GetService'Players'.LocalPlayer.Character:FindFirstChildOfClass('Humanoid')
+			humanoid:ChangeState('Jumping')
+			wait()
+			humanoid:ChangeState('Seated')
+			end
+		end
+	end)
+end
+   end,
+})
+
+local Input = MainTab:CreateInput({
+   Name = "Walkspeed",
+   PlaceholderText = "1-200",
+   RemoveTextAfterFocusLost = true,
+   Callback = function(Text)
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = (Text)
+   end,
+})
+
+local Button = MainTab:CreateButton({
+   Name = "Fly (Press g to Toggle)",
+   Callback = function()
+   repeat wait() 
+    until game.Players.LocalPlayer and game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:findFirstChild("Head") and game.Players.LocalPlayer.Character:findFirstChild("Humanoid") 
+local mouse = game.Players.LocalPlayer:GetMouse() 
+repeat wait() until mouse
+local plr = game.Players.LocalPlayer 
+local torso = plr.Character.Head 
+local flying = false
+local deb = true 
+local ctrl = {f = 0, b = 0, l = 0, r = 0} 
+local lastctrl = {f = 0, b = 0, l = 0, r = 0} 
+local maxspeed = 400 
+local speed = 5000 
+ 
+function Fly() 
+local bg = Instance.new("BodyGyro", torso) 
+bg.P = 9e4 
+bg.maxTorque = Vector3.new(9e9, 9e9, 9e9) 
+bg.cframe = torso.CFrame 
+local bv = Instance.new("BodyVelocity", torso) 
+bv.velocity = Vector3.new(0,0.1,0) 
+bv.maxForce = Vector3.new(9e9, 9e9, 9e9) 
+repeat wait() 
+plr.Character.Humanoid.PlatformStand = true 
+if ctrl.l + ctrl.r ~= 0 or ctrl.f + ctrl.b ~= 0 then 
+speed = speed+.5+(speed/maxspeed) 
+if speed > maxspeed then 
+speed = maxspeed 
+end 
+elseif not (ctrl.l + ctrl.r ~= 0 or ctrl.f + ctrl.b ~= 0) and speed ~= 0 then 
+speed = speed-1 
+if speed < 0 then 
+speed = 0 
+end 
+end 
+if (ctrl.l + ctrl.r) ~= 0 or (ctrl.f + ctrl.b) ~= 0 then 
+bv.velocity = ((game.Workspace.CurrentCamera.CoordinateFrame.lookVector * (ctrl.f+ctrl.b)) + ((game.Workspace.CurrentCamera.CoordinateFrame * CFrame.new(ctrl.l+ctrl.r,(ctrl.f+ctrl.b)*.2,0).p) - game.Workspace.CurrentCamera.CoordinateFrame.p))*speed 
+lastctrl = {f = ctrl.f, b = ctrl.b, l = ctrl.l, r = ctrl.r} 
+elseif (ctrl.l + ctrl.r) == 0 and (ctrl.f + ctrl.b) == 0 and speed ~= 0 then 
+bv.velocity = ((game.Workspace.CurrentCamera.CoordinateFrame.lookVector * (lastctrl.f+lastctrl.b)) + ((game.Workspace.CurrentCamera.CoordinateFrame * CFrame.new(lastctrl.l+lastctrl.r,(lastctrl.f+lastctrl.b)*.2,0).p) - game.Workspace.CurrentCamera.CoordinateFrame.p))*speed 
+else 
+bv.velocity = Vector3.new(0,0.1,0) 
+end 
+bg.cframe = game.Workspace.CurrentCamera.CoordinateFrame * CFrame.Angles(-math.rad((ctrl.f+ctrl.b)*50*speed/maxspeed),0,0) 
+until not flying 
+ctrl = {f = 0, b = 0, l = 0, r = 0} 
+lastctrl = {f = 0, b = 0, l = 0, r = 0} 
+speed = 0 
+bg:Destroy() 
+bv:Destroy() 
+plr.Character.Humanoid.PlatformStand = false 
+end 
+mouse.KeyDown:connect(function(key) 
+if key:lower() == "g" then 
+if flying then flying = false 
+else 
+flying = true 
+Fly() 
+end 
+elseif key:lower() == "w" then 
+ctrl.f = 1 
+elseif key:lower() == "s" then 
+ctrl.b = -1 
+elseif key:lower() == "a" then 
+ctrl.l = -1 
+elseif key:lower() == "d" then 
+ctrl.r = 1 
+end 
+end) 
+mouse.KeyUp:connect(function(key) 
+if key:lower() == "w" then 
+ctrl.f = 0 
+elseif key:lower() == "s" then 
+ctrl.b = 0 
+elseif key:lower() == "a" then 
+ctrl.l = 0 
+elseif key:lower() == "d" then 
+ctrl.r = 0 
+end 
+end)
+Fly()
+   end,
+})
+
+local Button = MainTab:CreateButton({
+   Name = "Noclip",
+   Callback = function()
+   local Workspace = game:GetService("Workspace")
+local CoreGui = game:GetService("CoreGui")
+local Players = game:GetService("Players")
+local Noclip = Instance.new("ScreenGui")
+local BG = Instance.new("Frame")
+local Title = Instance.new("TextLabel")
+local Toggle = Instance.new("TextButton")
+local StatusPF = Instance.new("TextLabel")
+local Status = Instance.new("TextLabel")
+local Credit = Instance.new("TextLabel")
+local Plr = Players.LocalPlayer
+local Clipon = false
+
+Noclip.Name = "Noclip"
+Noclip.Parent = game.CoreGui
+
+BG.Name = "BG"
+BG.Parent = Noclip
+BG.BackgroundColor3 = Color3.new(0.0980392, 0.0980392, 0.0980392)
+BG.BorderColor3 = Color3.new(0.0588235, 0.0588235, 0.0588235)
+BG.BorderSizePixel = 2
+BG.Position = UDim2.new(0.149479166, 0, 0.82087779, 0)
+BG.Size = UDim2.new(0, 210, 0, 127)
+BG.Active = true
+BG.Draggable = true
+
+Title.Name = "Title"
+Title.Parent = BG
+Title.BackgroundColor3 = Color3.new(0.266667, 0.00392157, 0.627451)
+Title.BorderColor3 = Color3.new(0.180392, 0, 0.431373)
+Title.BorderSizePixel = 2
+Title.Size = UDim2.new(0, 210, 0, 33)
+Title.Font = Enum.Font.Highway
+Title.Text = "Noclip"
+Title.TextColor3 = Color3.new(1, 1, 1)
+Title.FontSize = Enum.FontSize.Size32
+Title.TextSize = 30
+Title.TextStrokeColor3 = Color3.new(0.180392, 0, 0.431373)
+Title.TextStrokeTransparency = 0
+
+Toggle.Parent = BG
+Toggle.BackgroundColor3 = Color3.new(0.266667, 0.00392157, 0.627451)
+Toggle.BorderColor3 = Color3.new(0.180392, 0, 0.431373)
+Toggle.BorderSizePixel = 2
+Toggle.Position = UDim2.new(0.152380958, 0, 0.374192119, 0)
+Toggle.Size = UDim2.new(0, 146, 0, 36)
+Toggle.Font = Enum.Font.Highway
+Toggle.FontSize = Enum.FontSize.Size28
+Toggle.Text = "Toggle"
+Toggle.TextColor3 = Color3.new(1, 1, 1)
+Toggle.TextSize = 25
+Toggle.TextStrokeColor3 = Color3.new(0.180392, 0, 0.431373)
+Toggle.TextStrokeTransparency = 0
+
+StatusPF.Name = "StatusPF"
+StatusPF.Parent = BG
+StatusPF.BackgroundColor3 = Color3.new(1, 1, 1)
+StatusPF.BackgroundTransparency = 1
+StatusPF.Position = UDim2.new(0.314285725, 0, 0.708661377, 0)
+StatusPF.Size = UDim2.new(0, 56, 0, 20)
+StatusPF.Font = Enum.Font.Highway
+StatusPF.FontSize = Enum.FontSize.Size24
+StatusPF.Text = "Status:"
+StatusPF.TextColor3 = Color3.new(1, 1, 1)
+StatusPF.TextSize = 20
+StatusPF.TextStrokeColor3 = Color3.new(0.333333, 0.333333, 0.333333)
+StatusPF.TextStrokeTransparency = 0
+StatusPF.TextWrapped = true
+
+Status.Name = "Status"
+Status.Parent = BG
+Status.BackgroundColor3 = Color3.new(1, 1, 1)
+Status.BackgroundTransparency = 1
+Status.Position = UDim2.new(0.580952346, 0, 0.708661377, 0)
+Status.Size = UDim2.new(0, 56, 0, 20)
+Status.Font = Enum.Font.Highway
+Status.FontSize = Enum.FontSize.Size14
+Status.Text = "off"
+Status.TextColor3 = Color3.new(0.666667, 0, 0)
+Status.TextScaled = true
+Status.TextSize = 14
+Status.TextStrokeColor3 = Color3.new(0.180392, 0, 0.431373)
+Status.TextWrapped = true
+Status.TextXAlignment = Enum.TextXAlignment.Left
+
+Credit.Name = "Credit"
+Credit.Parent = BG
+Credit.BackgroundColor3 = Color3.new(1, 1, 1)
+Credit.BackgroundTransparency = 1
+Credit.Position = UDim2.new(0.195238099, 0, 0.866141737, 0)
+Credit.Size = UDim2.new(0, 128, 0, 17)
+Credit.Font = Enum.Font.SourceSans
+Credit.FontSize = Enum.FontSize.Size18
+Credit.Text = "Created by KingLuna"
+Credit.TextColor3 = Color3.new(1, 1, 1)
+Credit.TextSize = 16
+Credit.TextStrokeColor3 = Color3.new(0.196078, 0.196078, 0.196078)
+Credit.TextStrokeTransparency = 0
+Credit.TextWrapped = true
+
+Toggle.MouseButton1Click:connect(function()
+ if Status.Text == "off" then
+  Clipon = true
+  Status.Text = "on"
+  Status.TextColor3 = Color3.new(0,185,0)
+  Stepped = game:GetService("RunService").Stepped:Connect(function()
+   if not Clipon == false then
+    for a, b in pairs(Workspace:GetChildren()) do
+                if b.Name == Plr.Name then
+                for i, v in pairs(Workspace[Plr.Name]:GetChildren()) do
+                if v:IsA("BasePart") then
+                v.CanCollide = false
+                end end end end
+   else
+    Stepped:Disconnect()
+   end
+  end)
+ elseif Status.Text == "on" then
+  Clipon = false
+  Status.Text = "off"
+  Status.TextColor3 = Color3.new(170,0,0)
+ end
+end)
+   end,
+})
+
+local Button = MainTab:CreateButton({
+   Name = "ESP",
+   Callback = function()
+   loadstring(game:HttpGet(('https://raw.githubusercontent.com/zachisfunny/esp-unversal/main/script'),true))()
+   end,
+})
+
+local Button = MainTab:CreateButton({
+   Name = "Teleporter GUI",
+   Callback = function()
+   -- Prison Life Teleportrr
+-- Made By Robloxallinguest
+
+
+-- Instances:
+
+local ScreenGui = Instance.new("ScreenGui")
+local Main = Instance.new("Frame")
+local Head = Instance.new("TextLabel")
+local Close = Instance.new("TextButton")
+local Sewer = Instance.new("TextButton")
+local GTower = Instance.new("TextButton")
+local Foodplace = Instance.new("TextButton")
+local Nexus = Instance.new("TextButton")
+local MainGate = Instance.new("TextButton")
+local Armory = Instance.new("TextButton")
+local Yard = Instance.new("TextButton")
+local Tower = Instance.new("TextButton")
+local BNexus = Instance.new("TextButton")
+local Cells = Instance.new("TextButton")
+local Base = Instance.new("TextButton")
+local MadeBy = Instance.new("TextButton")
+local Opengui = Instance.new("Frame")
+local openbutton = Instance.new("TextButton")
+
+--Properties:
+
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+Main.Name = "Main"
+Main.Parent = ScreenGui
+Main.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Main.Position = UDim2.new(0.575342417, 0, 0.55268389, 0)
+Main.Size = UDim2.new(0, 435, 0, 210)
+Main.Visible = false
+Main.Active = true
+Main.Draggable = true
+
+Head.Name = "Head"
+Head.Parent = Main
+Head.BackgroundColor3 = Color3.fromRGB(0, 0, 255)
+Head.Size = UDim2.new(0, 386, 0, 30)
+Head.Font = Enum.Font.SourceSans
+Head.Text = "Prison Life Teleportrr "
+Head.TextColor3 = Color3.fromRGB(0, 0, 0)
+Head.TextScaled = true
+Head.TextSize = 14.000
+Head.TextWrapped = true
+
+Close.Name = "Close"
+Close.Parent = Main
+Close.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+Close.Position = UDim2.new(0.887445867, 0, 0, 0)
+Close.Size = UDim2.new(0, 48, 0, 30)
+Close.Font = Enum.Font.SourceSans
+Close.Text = "X"
+Close.TextColor3 = Color3.fromRGB(0, 0, 0)
+Close.TextScaled = true
+Close.TextSize = 14.000
+Close.TextWrapped = true
+Close.MouseButton1Down:connect(function()
+	Main.Visible = false
+	Opengui.Visible = true
+end)
+
+Sewer.Name = "Sewer"
+Sewer.Parent = Main
+Sewer.BackgroundColor3 = Color3.fromRGB(0, 255, 255)
+Sewer.Position = UDim2.new(0.0173160583, 0, 0.194053203, 0)
+Sewer.Size = UDim2.new(0, 133, 0, 34)
+Sewer.Font = Enum.Font.SourceSans
+Sewer.Text = "Sewer"
+Sewer.TextColor3 = Color3.fromRGB(0, 0, 0)
+Sewer.TextScaled = true
+Sewer.TextSize = 14.000
+Sewer.TextWrapped = true
+Sewer.MouseButton1Down:connect(function()
+	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(916, 79, 2311)
+end)
+
+GTower.Name = "GTower"
+GTower.Parent = Main
+GTower.BackgroundColor3 = Color3.fromRGB(0, 255, 255)
+GTower.Position = UDim2.new(0.354978412, 0, 0.194053203, 0)
+GTower.Size = UDim2.new(0, 133, 0, 34)
+GTower.Font = Enum.Font.SourceSans
+GTower.Text = "Gate Tower"
+GTower.TextColor3 = Color3.fromRGB(0, 0, 0)
+GTower.TextScaled = true
+GTower.TextSize = 14.000
+GTower.TextWrapped = true
+GTower.MouseButton1Down:connect(function()
+	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(502, 126, 2306)
+end)
+
+Foodplace.Name = "Foodplace"
+Foodplace.Parent = Main
+Foodplace.BackgroundColor3 = Color3.fromRGB(0, 255, 255)
+Foodplace.Position = UDim2.new(0.68398273, 0, 0.194053203, 0)
+Foodplace.Size = UDim2.new(0, 133, 0, 34)
+Foodplace.Font = Enum.Font.SourceSans
+Foodplace.Text = "Cafeteria"
+Foodplace.TextColor3 = Color3.fromRGB(0, 0, 0)
+Foodplace.TextScaled = true
+Foodplace.TextSize = 14.000
+Foodplace.TextWrapped = true
+Foodplace.MouseButton1Down:connect(function()
+	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(877, 100, 2256)
+end)
+
+Nexus.Name = "Nexus"
+Nexus.Parent = Main
+Nexus.BackgroundColor3 = Color3.fromRGB(0, 255, 255)
+Nexus.Position = UDim2.new(0.0173160583, 0, 0.414141417, 0)
+Nexus.Size = UDim2.new(0, 133, 0, 34)
+Nexus.Font = Enum.Font.SourceSans
+Nexus.Text = "Nexus"
+Nexus.TextColor3 = Color3.fromRGB(0, 0, 0)
+Nexus.TextScaled = true
+Nexus.TextSize = 14.000
+Nexus.TextWrapped = true
+Nexus.MouseButton1Down:connect(function()
+	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(888, 100, 2388)
+end)
+
+MainGate.Name = "Main Gate"
+MainGate.Parent = Main
+MainGate.BackgroundColor3 = Color3.fromRGB(0, 255, 255)
+MainGate.Position = UDim2.new(0.0151515566, 0, 0.621567845, 0)
+MainGate.Size = UDim2.new(0, 133, 0, 34)
+MainGate.Font = Enum.Font.SourceSans
+MainGate.Text = "Main Gate"
+MainGate.TextColor3 = Color3.fromRGB(0, 0, 0)
+MainGate.TextScaled = true
+MainGate.TextSize = 14.000
+MainGate.TextWrapped = true
+MainGate.MouseButton1Down:connect(function()
+	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(505, 103, 2250)
+end)
+
+Armory.Name = "Armory"
+Armory.Parent = Main
+Armory.BackgroundColor3 = Color3.fromRGB(0, 255, 255)
+Armory.Position = UDim2.new(0.354978412, 0, 0.414141446, 0)
+Armory.Size = UDim2.new(0, 133, 0, 34)
+Armory.Font = Enum.Font.SourceSans
+Armory.Text = "Armory"
+Armory.TextColor3 = Color3.fromRGB(0, 0, 0)
+Armory.TextScaled = true
+Armory.TextSize = 14.000
+Armory.TextWrapped = true
+Armory.MouseButton1Down:connect(function()
+	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(789, 100, 2260)
+end)
+
+Yard.Name = "Yard"
+Yard.Parent = Main
+Yard.BackgroundColor3 = Color3.fromRGB(0, 255, 255)
+Yard.Position = UDim2.new(0.354978412, 0, 0.621567845, 0)
+Yard.Size = UDim2.new(0, 133, 0, 34)
+Yard.Font = Enum.Font.SourceSans
+Yard.Text = "Yard"
+Yard.TextColor3 = Color3.fromRGB(0, 0, 0)
+Yard.TextScaled = true
+Yard.TextSize = 14.000
+Yard.TextWrapped = true
+Yard.MouseButton1Down:connect(function()
+	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(791, 98, 2498)
+end)
+
+Tower.Name = "Tower"
+Tower.Parent = Main
+Tower.BackgroundColor3 = Color3.fromRGB(0, 255, 255255)
+Tower.Position = UDim2.new(0.68398273, 0, 0.409446597, 0)
+Tower.Size = UDim2.new(0, 133, 0, 34)
+Tower.Font = Enum.Font.SourceSans
+Tower.Text = "Tower"
+Tower.TextColor3 = Color3.fromRGB(0, 0, 0)
+Tower.TextScaled = true
+Tower.TextSize = 14.000
+Tower.TextWrapped = true
+Tower.MouseButton1Down:connect(function()
+	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(822, 131, 2588)
+end)
+
+BNexus.Name = "BNexus"
+BNexus.Parent = Main
+BNexus.BackgroundColor3 = Color3.fromRGB(0, 255, 255)
+BNexus.Position = UDim2.new(0.688311696, 0, 0.626262665, 0)
+BNexus.Size = UDim2.new(0, 133, 0, 34)
+BNexus.Font = Enum.Font.SourceSans
+BNexus.Text = "Back Nexus"
+BNexus.TextColor3 = Color3.fromRGB(0, 0, 0)
+BNexus.TextScaled = true
+BNexus.TextSize = 14.000
+BNexus.TextWrapped = true
+BNexus.MouseButton1Down:connect(function()
+	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(982, 100, 2334)
+end)
+
+Cells.Name = "Cells"
+Cells.Parent = Main
+Cells.BackgroundColor3 = Color3.fromRGB(0, 255, 255)
+Cells.Position = UDim2.new(0.354978412, 0, 0.828282833, 0)
+Cells.Size = UDim2.new(0, 133, 0, 34)
+Cells.Font = Enum.Font.SourceSans
+Cells.Text = "Cells"
+Cells.TextColor3 = Color3.fromRGB(0, 0, 0)
+Cells.TextScaled = true
+Cells.TextSize = 14.000
+Cells.TextWrapped = true
+Cells.MouseButton1Down:connect(function()
+	print("DICK")
+end)
+
+Base.Name = "Base"
+Base.Parent = Main
+Base.BackgroundColor3 = Color3.fromRGB(0, 255, 2550)
+Base.Position = UDim2.new(0.0151515603, 0, 0.828282833, 0)
+Base.Size = UDim2.new(0, 133, 0, 34)
+Base.Font = Enum.Font.SourceSans
+Base.Text = "Criminal Base"
+Base.TextColor3 = Color3.fromRGB(0, 0, 0)
+Base.TextScaled = true
+Base.TextSize = 14.000
+Base.TextWrapped = true
+Base.MouseButton1Down:connect(function()
+	game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-943, 95, 2055)
+end)
+
+MadeBy.Name = "Made By"
+MadeBy.Parent = Main
+MadeBy.BackgroundColor3 = Color3.fromRGB(0, 255, 255)
+MadeBy.Position = UDim2.new(0.686147213, 0, 0.828282833, 0)
+MadeBy.Size = UDim2.new(0, 133, 0, 34)
+MadeBy.Font = Enum.Font.SourceSans
+MadeBy.Text = "Credits"
+MadeBy.TextColor3 = Color3.fromRGB(0, 0, 0)
+MadeBy.TextScaled = true
+MadeBy.TextSize = 14.000
+MadeBy.TextWrapped = true
+MadeBy.MouseButton1Down:connect(function()
+	local message = Instance.new("Message",game.Workspace)
+	message.Text = 'Prison Life Teleportrr Made By Robloxallinguest.'
+	wait(5)
+	message:Destroy()
+end)
+
+Opengui.Name = "Opengui"
+Opengui.Parent = ScreenGui
+Opengui.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Opengui.Position = UDim2.new(-0.000913231575, 0, 0.55268389, 0)
+Opengui.Size = UDim2.new(0, 107, 0, 30)
+
+openbutton.Name = "openbutton"
+openbutton.Parent = Opengui
+openbutton.BackgroundColor3 = Color3.fromRGB(56, 190, 216)
+openbutton.Position = UDim2.new(3.56513752e-08, 0, 0, 0)
+openbutton.Size = UDim2.new(0, 107, 0, 30)
+openbutton.Font = Enum.Font.SourceSans
+openbutton.Text = "OPEN"
+openbutton.TextColor3 = Color3.fromRGB(0, 0, 0)
+openbutton.TextScaled = true
+openbutton.TextSize = 14.000
+openbutton.TextWrapped = true
+openbutton.MouseButton1Down:connect(function()
+	Main.Visible = true
+	Opengui.Visible = false
+end)
+   end,
+})
+
+local Button = MainTab:CreateButton({
+   Name = "https://discord.gg/Yf4tCv4VeA",
+   Callback = function()
+   print ('https://discord.gg/Yf4tCv4VeA')
+   end,
+})
+
+local Button = MainTab:CreateButton({
+   Name = "youtube.com/channel/UCQMgcE_GhuSYvZEbqM_9oBg",
+   Callback = function()
+   print ('youtube.com/channel/UCQMgcE_GhuSYvZEbqM_9oBg')
+   end,
+})
