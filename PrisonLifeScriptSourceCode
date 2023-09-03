@@ -582,6 +582,13 @@ end)
 })
 
 local Button = MainTab:CreateButton({
+   Name = "Load Tiger Admin",
+   Callback = function()
+   loadstring(game:HttpGet(('https://raw.githubusercontent.com/h17s3/TIGERADMIN/main/TIGERADMINSCRIPTFREE'),true))()
+   end,
+})
+
+local Button = MainTab:CreateButton({
    Name = "https://discord.gg/Yf4tCv4VeA",
    Callback = function()
    print ('https://discord.gg/Yf4tCv4VeA')
