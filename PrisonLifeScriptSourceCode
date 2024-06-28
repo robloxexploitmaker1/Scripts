@@ -582,9 +582,9 @@ end)
 })
 
 local Button = MainTab:CreateButton({
-   Name = "Load Tiger Admin",
+   Name = "Load Admin Script",
    Callback = function()
-   loadstring(game:HttpGet(('https://raw.githubusercontent.com/h17s3/TIGERADMIN/main/TIGERADMINSCRIPTFREE'),true))()
+   loadstring(game:HttpGet('https://raw.githubusercontent.com/elliexmln/PrizzLife/main/pladmin.lua'))()
    end,
 })
 
