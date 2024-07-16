@@ -1,0 +1,661 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+   Name = "Sierra Hub",
+   LoadingTitle = "Universal script",
+   LoadingSubtitle = "by (REDACTED) (want to keep my id private)",
+   ConfigurationSaving = {
+      Enabled = False,
+      FolderName = nil, -- Create a custom folder for your hub/game
+      FileName = "Big Hub"
+   },
+   Discord = {
+      Enabled = false,
+      Invite = "noinvitelink", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ABCD would be ABCD
+      RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+   },
+   KeySystem = false, -- Set this to true to use our key system
+   KeySettings = {
+      Title = "Untitled",
+      Subtitle = "Key System",
+      Note = "No method of obtaining the key is provided",
+      FileName = "Key", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
+      SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+      GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+      Key = {"Hello"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
+   }
+})
+
+local MainTab = Window:CreateTab("Arsenal Scripts", nil) -- Title, Image
+local MainSection = MainTab:CreateSection("Solara support (wave+ Section coming soon)")
+
+Rayfield:Notify({
+   Title = "Succesfully executed",
+   Content = "You Succesfully Executed the Script!",
+   Duration = 5,
+    Image = nil,
+   Actions = { -- Notification Buttons
+      Ignore = {
+         Name = "Okay!",
+         Callback = function()
+         print("The user tapped Okay!")
+      end
+   },
+},
+})
+
+
+local Button = MainTab:CreateButton({
+    Name = "Load Best Arsenal Script",
+   Callback = function()
+    loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/b95e8fecdf824e41f4a030044b055add.lua"))()
+   -- The function that takes place when the button is pressed
+   end,
+})
+
+local Tab = Window:CreateTab("Prison Life", nil) -- Title, Image
+
+local Button = Tab:CreateButton({
+   Name = "Load prison life script hub",
+   Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/robloxexploitmaker1/Scripts/main/PrisonLifeScriptSourceCode"))()
+   -- The function that takes place when the button is pressed
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Load Admin Script",
+   Callback = function()
+   loadstring(game:HttpGet('https://raw.githubusercontent.com/elliexmln/PrizzLife/main/pladmin.lua'))()
+   end,
+})
+
+local Tab = Window:CreateTab("Universal", nil) -- Title, Image
+
+local Button = Tab:CreateButton({
+   Name = "universal Esp and aimbot (esp is not the best but still works)",
+   Callback = function()
+            PLAYER  = game.Players.LocalPlayer
+MOUSE   = PLAYER:GetMouse()
+CC      = game.Workspace.CurrentCamera
+
+ENABLED      = false
+ESP_ENABLED  = false
+
+_G.FREE_FOR_ALL = false
+
+_G.ESP_BIND    = 52
+_G.CHANGE_AIM  = 'q'
+
+_G.AIM_AT = 'Head'
+
+wait(1)
+
+function GetNearestPlayerToMouse()
+	local PLAYERS      = {}
+	local PLAYER_HOLD  = {}
+	local DISTANCES    = {}
+	for i, v in pairs(game.Players:GetPlayers()) do
+		if v ~= PLAYER then
+			table.insert(PLAYERS, v)
+		end
+	end
+	for i, v in pairs(PLAYERS) do
+		if _G.FREE_FOR_ALL == false then
+			if v and v.Character ~= nil and v.Team ~= PLAYER.Team then
+				local AIM = v.Character:FindFirstChild(_G.AIM_AT)
+				if AIM ~= nil then
+					local DISTANCE                 = (AIM.Position - game.Workspace.CurrentCamera.CFrame.p).magnitude
+					local RAY                      = Ray.new(game.Workspace.CurrentCamera.CFrame.p, (MOUSE.Hit.p - CC.CFrame.p).unit * DISTANCE)
+					local HIT,POS                  = game.Workspace:FindPartOnRay(RAY, game.Workspace)
+					local DIFF                     = math.floor((POS - AIM.Position).magnitude)
+					PLAYER_HOLD[v.Name .. i]       = {}
+					PLAYER_HOLD[v.Name .. i].dist  = DISTANCE
+					PLAYER_HOLD[v.Name .. i].plr   = v
+					PLAYER_HOLD[v.Name .. i].diff  = DIFF
+					table.insert(DISTANCES, DIFF)
+				end
+			end
+		elseif _G.FREE_FOR_ALL == true then
+			local AIM = v.Character:FindFirstChild(_G.AIM_AT)
+			if AIM ~= nil then
+				local DISTANCE                 = (AIM.Position - game.Workspace.CurrentCamera.CFrame.p).magnitude
+				local RAY                      = Ray.new(game.Workspace.CurrentCamera.CFrame.p, (MOUSE.Hit.p - CC.CFrame.p).unit * DISTANCE)
+				local HIT,POS                  = game.Workspace:FindPartOnRay(RAY, game.Workspace)
+				local DIFF                     = math.floor((POS - AIM.Position).magnitude)
+				PLAYER_HOLD[v.Name .. i]       = {}
+				PLAYER_HOLD[v.Name .. i].dist  = DISTANCE
+				PLAYER_HOLD[v.Name .. i].plr   = v
+				PLAYER_HOLD[v.Name .. i].diff  = DIFF
+				table.insert(DISTANCES, DIFF)
+			end
+		end
+	end
+	
+	if unpack(DISTANCES) == nil then
+		return false
+	end
+	
+	local L_DISTANCE = math.floor(math.min(unpack(DISTANCES)))
+	if L_DISTANCE > 20 then
+		return false
+	end
+	
+	for i, v in pairs(PLAYER_HOLD) do
+		if v.diff == L_DISTANCE then
+			return v.plr
+		end
+	end
+	return false
+end
+
+GUI_MAIN                           = Instance.new('ScreenGui', game.CoreGui)
+GUI_TARGET                         = Instance.new('TextLabel', GUI_MAIN)
+GUI_AIM_AT                         = Instance.new('TextLabel', GUI_MAIN)
+
+GUI_MAIN.Name                      = 'AIMBOT'
+
+GUI_TARGET.Size                    = UDim2.new(0,200,0,30)
+GUI_TARGET.BackgroundTransparency  = 0.5
+GUI_TARGET.BackgroundColor         = BrickColor.new('Fossil')
+GUI_TARGET.BorderSizePixel         = 0
+GUI_TARGET.Position                = UDim2.new(0.5,-100,0,0)
+GUI_TARGET.Text                    = 'AIMBOT : OFF'
+GUI_TARGET.TextColor3              = Color3.new(1,1,1)
+GUI_TARGET.TextStrokeTransparency  = 1
+GUI_TARGET.TextWrapped             = true
+GUI_TARGET.FontSize                = 'Size24'
+GUI_TARGET.Font                    = 'SourceSansBold'
+
+GUI_AIM_AT.Size                    = UDim2.new(0,200,0,20)
+GUI_AIM_AT.BackgroundTransparency  = 0.5
+GUI_AIM_AT.BackgroundColor         = BrickColor.new('Fossil')
+GUI_AIM_AT.BorderSizePixel         = 0
+GUI_AIM_AT.Position                = UDim2.new(0.5,-100,0,30)
+GUI_AIM_AT.Text                    = 'AIMING : HEAD'
+GUI_AIM_AT.TextColor3              = Color3.new(1,1,1)
+GUI_AIM_AT.TextStrokeTransparency  = 1
+GUI_AIM_AT.TextWrapped             = true
+GUI_AIM_AT.FontSize                = 'Size18'
+GUI_AIM_AT.Font                    = 'SourceSansBold'
+
+local TRACK = false
+
+function CREATE(BASE, TEAM)
+	local ESP_MAIN                   = Instance.new('BillboardGui', PLAYER.PlayerGui)
+	local ESP_DOT                    = Instance.new('Frame', ESP_MAIN)
+	local ESP_NAME                   = Instance.new('TextLabel', ESP_MAIN)
+	
+	ESP_MAIN.Name                    = 'ESP'
+	ESP_MAIN.Adornee                 = BASE
+	ESP_MAIN.AlwaysOnTop             = true
+	ESP_MAIN.ExtentsOffset           = Vector3.new(0, 1, 0)
+	ESP_MAIN.Size                    = UDim2.new(0, 5, 0, 5)
+	
+	ESP_DOT.Name                     = 'DOT'
+	ESP_DOT.BackgroundColor          = BrickColor.new('Bright red')
+	ESP_DOT.BackgroundTransparency   = 0.3
+	ESP_DOT.BorderSizePixel          = 0
+	ESP_DOT.Position                 = UDim2.new(-0.5, 0, -0.5, 0)
+	ESP_DOT.Size                     = UDim2.new(2, 0, 2, 0)
+	ESP_DOT.Visible                  = true
+	ESP_DOT.ZIndex                   = 10
+	
+	ESP_NAME.Name                    = 'NAME'
+	ESP_NAME.BackgroundColor3        = Color3.new(255, 255, 255)
+	ESP_NAME.BackgroundTransparency  = 1
+	ESP_NAME.BorderSizePixel         = 0
+	ESP_NAME.Position                = UDim2.new(0, 0, 0, -40)
+	ESP_NAME.Size                    = UDim2.new(1, 0, 10, 0)
+	ESP_NAME.Visible                 = true
+	ESP_NAME.ZIndex                  = 10
+	ESP_NAME.Font                    = 'ArialBold'
+	ESP_NAME.FontSize                = 'Size14'
+	ESP_NAME.Text                    = BASE.Parent.Name:upper()
+	ESP_NAME.TextColor               = BrickColor.new('Bright red')
+end
+
+function CLEAR()
+	for _,v in pairs(PLAYER.PlayerGui:children()) do
+		if v.Name == 'ESP' and v:IsA('BillboardGui') then
+			v:Destroy()
+		end
+	end
+end
+
+function FIND()
+	CLEAR()
+	TRACK = true
+	spawn(function()
+		while wait() do
+			if TRACK then
+				CLEAR()
+				for i,v in pairs(game.Players:GetChildren()) do
+					if v.Character and v.Character:FindFirstChild('Head') then
+						if _G.FREE_FOR_ALL == false then
+							if v.Team ~= PLAYER.Team then
+								if v.Character:FindFirstChild('Head') then
+									CREATE(v.Character.Head, true)
+								end
+							end
+						else
+							if v.Character:FindFirstChild('Head') then
+								CREATE(v.Character.Head, true)
+							end
+						end
+					end
+				end
+			end
+		end
+		wait(1)
+	end)
+end
+
+MOUSE.Button2Down:connect(function()
+	ENABLED = true
+end)
+
+MOUSE.Button2Up:connect(function()
+	ENABLED = false
+end)
+
+MOUSE.KeyDown:connect(function(KEY)
+	KEY = KEY:lower():byte()
+	if KEY == _G.ESP_BIND then
+		if ESP_ENABLED == false then
+			FIND()
+			ESP_ENABLED = true
+			print('ESP : ON')
+		elseif ESP_ENABLED == true then
+			wait()
+			CLEAR()
+			TRACK = false
+			ESP_ENABLED = false
+			print('ESP : OFF')
+		end
+	end
+end)
+
+MOUSE.KeyDown:connect(function(KEY)
+	if KEY == _G.CHANGE_AIM then
+		if _G.AIM_AT == 'Head' then
+			_G.AIM_AT = 'Torso'
+			GUI_AIM_AT.Text = 'AIMING : TORSO'
+		elseif _G.AIM_AT == 'Torso' then
+			_G.AIM_AT = 'Head'
+			GUI_AIM_AT.Text = 'AIMING : HEAD'
+		end
+	end
+end)
+
+game:GetService('RunService').RenderStepped:connect(function()
+	if ENABLED then
+		local TARGET = GetNearestPlayerToMouse()
+		if (TARGET ~= false) then
+			local AIM = TARGET.Character:FindFirstChild(_G.AIM_AT)
+			if AIM then
+				CC.CoordinateFrame = CFrame.new(CC.CoordinateFrame.p, AIM.CFrame.p)
+			end
+			GUI_TARGET.Text = 'AIMBOT : '.. TARGET.Name:sub(1, 5)
+		else
+			GUI_TARGET.Text = 'AIMBOT : OFF'
+		end
+	end
+end)
+
+repeat
+	wait()
+	if ESP_ENABLED == true then
+		FIND()
+	end
+until ESP_ENABLED == false
+                                        
+   -- The function that takes place when the button is pressed
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Load Chat Spammer (not draggable even tho it says it is or its just a pain in the ass to) ",
+   Callback = function()
+            -- Function to make the frame draggable
+local function makeDraggable(frame)
+    local dragging
+    local dragInput
+    local dragStart
+    local startPos
+
+    local function update(input)
+        local delta = input.Position - dragStart
+        frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+
+    frame.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position - frame.Position
+            startPos = frame.Position
+
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+
+    frame.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.Touch and dragging then
+            dragInput = input
+            update(input)
+        end
+    end)
+
+    frame.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.Touch then
+            dragging = false
+        end
+    end)
+end
+
+-- Create a ScreenGui to hold the UI elements
+local gui = Instance.new("ScreenGui")
+gui.Parent = game.Players.LocalPlayer.PlayerGui
+
+-- Create a Frame to hold the textbox and button
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 200, 0, 50)
+frame.Position = UDim2.new(0.5, -100, 0.5, -25)
+frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+frame.BorderSizePixel = 5
+frame.Parent = gui
+
+-- Make the frame draggable
+makeDraggable(frame)
+
+-- Create a TextBox for typing
+local textBox = Instance.new("TextBox")
+textBox.Size = UDim2.new(0.7, 0, 1, 0)
+textBox.Position = UDim2.new(0, 0, 0, 0)
+textBox.Parent = frame
+
+-- Create a TextButton for sending the message
+local button = Instance.new("TextButton")
+button.Size = UDim2.new(0.3, 0, 1, 0)
+button.Position = UDim2.new(0.7, 0, 0, 0)
+button.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
+button.TextColor3 = Color3.fromRGB(255, 255, 255)
+button.Text = "Chat dat shit"
+button.Parent = frame
+
+-- Function to handle button click
+button.MouseButton1Click:Connect(function()
+    -- Get the text from the TextBox
+    local message = textBox.Text
+    
+    -- Do something with the message (e.g., chat it)
+    game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("SayMessageRequest"):FireServer(message, "All")
+end)
+   -- The function that takes place when the button is pressed
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Inf Jump (able to toggle)",
+   Callback = function()
+   --Toggles the infinite jump between on or off on every script run
+_G.infinjump = not _G.infinjump
+
+if _G.infinJumpStarted == nil then
+	--Ensures this only runs once to save resources
+	_G.infinJumpStarted = true
+	
+	--Notifies readiness
+	game.StarterGui:SetCore("SendNotification", {Title="Youtube Hub"; Text="Infinite Jump Activated!"; Duration=5;})
+
+	--The actual infinite jump
+	local plr = game:GetService('Players').LocalPlayer
+	local m = plr:GetMouse()
+	m.KeyDown:connect(function(k)
+		if _G.infinjump then
+			if k:byte() == 32 then
+			humanoid = game:GetService'Players'.LocalPlayer.Character:FindFirstChildOfClass('Humanoid')
+			humanoid:ChangeState('Jumping')
+			wait()
+			humanoid:ChangeState('Seated')
+			end
+		end
+	end)
+end
+   end,
+})
+
+local Input = Tab:CreateInput({
+   Name = "Walkspeed",
+   PlaceholderText = "1-200",
+   RemoveTextAfterFocusLost = true,
+   Callback = function(Text)
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = (Text)
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Fly (Press g to Toggle)",
+   Callback = function()
+   repeat wait() 
+    until game.Players.LocalPlayer and game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:findFirstChild("Head") and game.Players.LocalPlayer.Character:findFirstChild("Humanoid") 
+local mouse = game.Players.LocalPlayer:GetMouse() 
+repeat wait() until mouse
+local plr = game.Players.LocalPlayer 
+local torso = plr.Character.Head 
+local flying = false
+local deb = true 
+local ctrl = {f = 0, b = 0, l = 0, r = 0} 
+local lastctrl = {f = 0, b = 0, l = 0, r = 0} 
+local maxspeed = 400 
+local speed = 5000 
+ 
+function Fly() 
+local bg = Instance.new("BodyGyro", torso) 
+bg.P = 9e4 
+bg.maxTorque = Vector3.new(9e9, 9e9, 9e9) 
+bg.cframe = torso.CFrame 
+local bv = Instance.new("BodyVelocity", torso) 
+bv.velocity = Vector3.new(0,0.1,0) 
+bv.maxForce = Vector3.new(9e9, 9e9, 9e9) 
+repeat wait() 
+plr.Character.Humanoid.PlatformStand = true 
+if ctrl.l + ctrl.r ~= 0 or ctrl.f + ctrl.b ~= 0 then 
+speed = speed+.5+(speed/maxspeed) 
+if speed > maxspeed then 
+speed = maxspeed 
+end 
+elseif not (ctrl.l + ctrl.r ~= 0 or ctrl.f + ctrl.b ~= 0) and speed ~= 0 then 
+speed = speed-1 
+if speed < 0 then 
+speed = 0 
+end 
+end 
+if (ctrl.l + ctrl.r) ~= 0 or (ctrl.f + ctrl.b) ~= 0 then 
+bv.velocity = ((game.Workspace.CurrentCamera.CoordinateFrame.lookVector * (ctrl.f+ctrl.b)) + ((game.Workspace.CurrentCamera.CoordinateFrame * CFrame.new(ctrl.l+ctrl.r,(ctrl.f+ctrl.b)*.2,0).p) - game.Workspace.CurrentCamera.CoordinateFrame.p))*speed 
+lastctrl = {f = ctrl.f, b = ctrl.b, l = ctrl.l, r = ctrl.r} 
+elseif (ctrl.l + ctrl.r) == 0 and (ctrl.f + ctrl.b) == 0 and speed ~= 0 then 
+bv.velocity = ((game.Workspace.CurrentCamera.CoordinateFrame.lookVector * (lastctrl.f+lastctrl.b)) + ((game.Workspace.CurrentCamera.CoordinateFrame * CFrame.new(lastctrl.l+lastctrl.r,(lastctrl.f+lastctrl.b)*.2,0).p) - game.Workspace.CurrentCamera.CoordinateFrame.p))*speed 
+else 
+bv.velocity = Vector3.new(0,0.1,0) 
+end 
+bg.cframe = game.Workspace.CurrentCamera.CoordinateFrame * CFrame.Angles(-math.rad((ctrl.f+ctrl.b)*50*speed/maxspeed),0,0) 
+until not flying 
+ctrl = {f = 0, b = 0, l = 0, r = 0} 
+lastctrl = {f = 0, b = 0, l = 0, r = 0} 
+speed = 0 
+bg:Destroy() 
+bv:Destroy() 
+plr.Character.Humanoid.PlatformStand = false 
+end 
+mouse.KeyDown:connect(function(key) 
+if key:lower() == "g" then 
+if flying then flying = false 
+else 
+flying = true 
+Fly() 
+end 
+elseif key:lower() == "w" then 
+ctrl.f = 1 
+elseif key:lower() == "s" then 
+ctrl.b = -1 
+elseif key:lower() == "a" then 
+ctrl.l = -1 
+elseif key:lower() == "d" then 
+ctrl.r = 1 
+end 
+end) 
+mouse.KeyUp:connect(function(key) 
+if key:lower() == "w" then 
+ctrl.f = 0 
+elseif key:lower() == "s" then 
+ctrl.b = 0 
+elseif key:lower() == "a" then 
+ctrl.l = 0 
+elseif key:lower() == "d" then 
+ctrl.r = 0 
+end 
+end)
+Fly()
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Noclip",
+   Callback = function()
+   local Workspace = game:GetService("Workspace")
+local CoreGui = game:GetService("CoreGui")
+local Players = game:GetService("Players")
+local Noclip = Instance.new("ScreenGui")
+local BG = Instance.new("Frame")
+local Title = Instance.new("TextLabel")
+local Toggle = Instance.new("TextButton")
+local StatusPF = Instance.new("TextLabel")
+local Status = Instance.new("TextLabel")
+local Credit = Instance.new("TextLabel")
+local Plr = Players.LocalPlayer
+local Clipon = false
+
+Noclip.Name = "Noclip"
+Noclip.Parent = game.CoreGui
+
+BG.Name = "BG"
+BG.Parent = Noclip
+BG.BackgroundColor3 = Color3.new(0.0980392, 0.0980392, 0.0980392)
+BG.BorderColor3 = Color3.new(0.0588235, 0.0588235, 0.0588235)
+BG.BorderSizePixel = 2
+BG.Position = UDim2.new(0.149479166, 0, 0.82087779, 0)
+BG.Size = UDim2.new(0, 210, 0, 127)
+BG.Active = true
+BG.Draggable = true
+
+Title.Name = "Title"
+Title.Parent = BG
+Title.BackgroundColor3 = Color3.new(0.266667, 0.00392157, 0.627451)
+Title.BorderColor3 = Color3.new(0.180392, 0, 0.431373)
+Title.BorderSizePixel = 2
+Title.Size = UDim2.new(0, 210, 0, 33)
+Title.Font = Enum.Font.Highway
+Title.Text = "Noclip"
+Title.TextColor3 = Color3.new(1, 1, 1)
+Title.FontSize = Enum.FontSize.Size32
+Title.TextSize = 30
+Title.TextStrokeColor3 = Color3.new(0.180392, 0, 0.431373)
+Title.TextStrokeTransparency = 0
+
+Toggle.Parent = BG
+Toggle.BackgroundColor3 = Color3.new(0.266667, 0.00392157, 0.627451)
+Toggle.BorderColor3 = Color3.new(0.180392, 0, 0.431373)
+Toggle.BorderSizePixel = 2
+Toggle.Position = UDim2.new(0.152380958, 0, 0.374192119, 0)
+Toggle.Size = UDim2.new(0, 146, 0, 36)
+Toggle.Font = Enum.Font.Highway
+Toggle.FontSize = Enum.FontSize.Size28
+Toggle.Text = "Toggle"
+Toggle.TextColor3 = Color3.new(1, 1, 1)
+Toggle.TextSize = 25
+Toggle.TextStrokeColor3 = Color3.new(0.180392, 0, 0.431373)
+Toggle.TextStrokeTransparency = 0
+
+StatusPF.Name = "StatusPF"
+StatusPF.Parent = BG
+StatusPF.BackgroundColor3 = Color3.new(1, 1, 1)
+StatusPF.BackgroundTransparency = 1
+StatusPF.Position = UDim2.new(0.314285725, 0, 0.708661377, 0)
+StatusPF.Size = UDim2.new(0, 56, 0, 20)
+StatusPF.Font = Enum.Font.Highway
+StatusPF.FontSize = Enum.FontSize.Size24
+StatusPF.Text = "Status:"
+StatusPF.TextColor3 = Color3.new(1, 1, 1)
+StatusPF.TextSize = 20
+StatusPF.TextStrokeColor3 = Color3.new(0.333333, 0.333333, 0.333333)
+StatusPF.TextStrokeTransparency = 0
+StatusPF.TextWrapped = true
+
+Status.Name = "Status"
+Status.Parent = BG
+Status.BackgroundColor3 = Color3.new(1, 1, 1)
+Status.BackgroundTransparency = 1
+Status.Position = UDim2.new(0.580952346, 0, 0.708661377, 0)
+Status.Size = UDim2.new(0, 56, 0, 20)
+Status.Font = Enum.Font.Highway
+Status.FontSize = Enum.FontSize.Size14
+Status.Text = "off"
+Status.TextColor3 = Color3.new(0.666667, 0, 0)
+Status.TextScaled = true
+Status.TextSize = 14
+Status.TextStrokeColor3 = Color3.new(0.180392, 0, 0.431373)
+Status.TextWrapped = true
+Status.TextXAlignment = Enum.TextXAlignment.Left
+
+Credit.Name = "Credit"
+Credit.Parent = BG
+Credit.BackgroundColor3 = Color3.new(1, 1, 1)
+Credit.BackgroundTransparency = 1
+Credit.Position = UDim2.new(0.195238099, 0, 0.866141737, 0)
+Credit.Size = UDim2.new(0, 128, 0, 17)
+Credit.Font = Enum.Font.SourceSans
+Credit.FontSize = Enum.FontSize.Size18
+Credit.Text = "Created by KingLuna"
+Credit.TextColor3 = Color3.new(1, 1, 1)
+Credit.TextSize = 16
+Credit.TextStrokeColor3 = Color3.new(0.196078, 0.196078, 0.196078)
+Credit.TextStrokeTransparency = 0
+Credit.TextWrapped = true
+
+Toggle.MouseButton1Click:connect(function()
+ if Status.Text == "off" then
+  Clipon = true
+  Status.Text = "on"
+  Status.TextColor3 = Color3.new(0,185,0)
+  Stepped = game:GetService("RunService").Stepped:Connect(function()
+   if not Clipon == false then
+    for a, b in pairs(Workspace:GetChildren()) do
+                if b.Name == Plr.Name then
+                for i, v in pairs(Workspace[Plr.Name]:GetChildren()) do
+                if v:IsA("BasePart") then
+                v.CanCollide = false
+                end end end end
+   else
+    Stepped:Disconnect()
+   end
+  end)
+ elseif Status.Text == "on" then
+  Clipon = false
+  Status.Text = "off"
+  Status.TextColor3 = Color3.new(170,0,0)
+ end
+end)
+   end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "load FE character Bypasser",
+   Callback = function()
+  loadstring("\108\111\97\100\115\116\114\105\110\103\40\103\97\109\101\58\72\116\116\112\71\101\116\40\34\104\116\116\112\115\58\47\47\114\97\119\46\103\105\116\104\117\98\117\115\101\114\99\111\110\116\101\110\116\46\99\111\109\47\103\48\48\108\88\112\108\111\105\116\101\114\47\103\48\48\108\88\112\108\111\105\116\101\114\47\109\97\105\110\47\70\101\37\50\48\98\121\112\97\115\115\34\44\32\116\114\117\101\41\41\40\41\10")()
+   end,
+})
